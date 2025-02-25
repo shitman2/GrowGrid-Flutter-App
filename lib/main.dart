@@ -58,161 +58,155 @@ class _MyAppState extends State<MyApp> {
           children: [
             const SizedBox(height: 20),
 
-            // TextField for Box Name
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: TextField(
-                controller: boxNameController,
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  hintText: "Enter Box Name",
-                  hintStyle: const TextStyle(color: Colors.white54),
-                  filled: true,
-                  fillColor: Colors.grey[800],
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            // Container with Icons
-            Stack(
-              children: [
-                Center(
-                  child: ClipRRect(
+            // Container with Box Name and Icons
+            Center(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Container(
+                  width: 400,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.blueGrey,
                     borderRadius: BorderRadius.circular(20),
-                    child: Container(
-                      height: 130,
-                      width: 400,
-                      color: Colors.white,
-                    ),
                   ),
-                ),
-                Center(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Container(
-                      height: 125,
-                      width: 395,
-                      color: Colors.blueGrey,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  right: 10,
-                  top: 10,
-                  child: Row(
+                  child: Column(
                     children: [
-                      if (isLightVisible) 
-                        IconButton(
-                        icon: toggleLight
-                            ? const Icon(Icons.lightbulb, size: 30)
-                            : const Icon(Icons.lightbulb_outline, size: 30),
-                        color: Colors.white,
-                        onPressed: () {
-                          setState(() {
-                            toggleLight = !toggleLight;
-                            isLightVisible = !isLightVisible;
-                          });
-                        },
+                      // Box Name Field inside Container
+                      TextField(
+                        controller: boxNameController,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          hintText: "Enter Box Name",
+                          hintStyle: const TextStyle(color: Colors.white54),
+                          filled: true,
+                          fillColor: Colors.grey[800],
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
                       ),
-                      const SizedBox(width: 10),
-                      IconButton(
-                        icon: toggleWater
-                            ? const Icon(Icons.water_drop, size: 30)
-                            : const Icon(Icons.water_drop_outlined, size: 30),
-                        color: Colors.white,
-                        onPressed: () {
-                          setState(() {
-                            toggleWater = !toggleWater;
-                            isWaterVisible = !isWaterVisible;
-                          });
-                        },
+
+                      const SizedBox(height: 10),
+
+                      // Icons in top-right corner with Dropdown Menus
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          // Light Icon
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                icon: toggleLight
+                                    ? const Icon(Icons.lightbulb, size: 30)
+                                    : const Icon(Icons.lightbulb_outline, size: 30),
+                                color: Colors.white,
+                                onPressed: () {
+                                  setState(() {
+                                    toggleLight = !toggleLight;
+                                    isLightVisible = !isLightVisible;
+                                  });
+                                },
+                              ),
+                              if (isLightVisible)
+                                buildDropdown(
+                                  hint: "Light Duration",
+                                  value: selectedDuration,
+                                  items: durations,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      selectedDuration = newValue;
+                                    });
+                                  },
+                                  icon: Icons.access_time,
+                                ),
+                              if (isLightVisible)
+                                buildDropdown(
+                                  hint: "Light Repeat",
+                                  value: selectedRepeat,
+                                  items: repeatOptions,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      selectedRepeat = newValue;
+                                      isCustomRepeat = newValue == "Custom";
+                                    });
+                                  },
+                                  icon: Icons.repeat,
+                                ),
+                              if (isLightVisible && isCustomRepeat)
+                                buildCustomRepeatField(
+                                  hint: "Enter custom repeat time",
+                                  onChanged: (value) {
+                                    setState(() {
+                                      customRepeatValue = value;
+                                    });
+                                  },
+                                ),
+                            ],
+                          ),
+
+                          const SizedBox(width: 10),
+
+                          // Water Icon
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                icon: toggleWater
+                                    ? const Icon(Icons.water_drop, size: 30)
+                                    : const Icon(Icons.water_drop_outlined, size: 30),
+                                color: Colors.white,
+                                onPressed: () {
+                                  setState(() {
+                                    toggleWater = !toggleWater;
+                                    isWaterVisible = !isWaterVisible;
+                                  });
+                                },
+                              ),
+                              if (isWaterVisible)
+                                buildDropdown(
+                                  hint: "Water Duration",
+                                  value: selectedWaterDuration,
+                                  items: durations,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      selectedWaterDuration = newValue;
+                                    });
+                                  },
+                                  icon: Icons.access_time,
+                                ),
+                              if (isWaterVisible)
+                                buildDropdown(
+                                  hint: "Water Repeat",
+                                  value: selectedWaterRepeat,
+                                  items: repeatOptions,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      selectedWaterRepeat = newValue;
+                                      isCustomWaterRepeat = newValue == "Custom";
+                                    });
+                                  },
+                                  icon: Icons.repeat,
+                                ),
+                              if (isWaterVisible && isCustomWaterRepeat)
+                                buildCustomRepeatField(
+                                  hint: "Enter custom water repeat time",
+                                  onChanged: (value) {
+                                    setState(() {
+                                      customWaterRepeatValue = value;
+                                    });
+                                  },
+                                ),
+                            ],
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
-              ],
-              
+              ),
             ),
-
-            const SizedBox(height: 10),
-
-            // Light Controls
-            if (isLightVisible) ...[
-              buildDropdown(
-                hint: "Light Duration",
-                value: selectedDuration,
-                items: durations,
-                onChanged: (newValue) {
-                  setState(() {
-                    selectedDuration = newValue;
-                  });
-                },
-                icon: Icons.access_time,
-              ),
-              buildDropdown(
-                hint: "Light Repeat",
-                value: selectedRepeat,
-                items: repeatOptions,
-                onChanged: (newValue) {
-                  setState(() {
-                    selectedRepeat = newValue;
-                    isCustomRepeat = newValue == "Custom";
-                  });
-                },
-                icon: Icons.repeat,
-              ),
-              if (isCustomRepeat)
-                buildCustomRepeatField(
-                  hint: "Enter custom repeat time",
-                  onChanged: (value) {
-                    setState(() {
-                      customRepeatValue = value;
-                    });
-                  },
-                ),
-            ],
-
-            // Water Controls
-            if (isWaterVisible) ...[
-              buildDropdown(
-                hint: "Water Duration",
-                value: selectedWaterDuration,
-                items: durations,
-                onChanged: (newValue) {
-                  setState(() {
-                    selectedWaterDuration = newValue;
-                  });
-                },
-                icon: Icons.access_time,
-              ),
-              buildDropdown(
-                hint: "Water Repeat",
-                value: selectedWaterRepeat,
-                items: repeatOptions,
-                onChanged: (newValue) {
-                  setState(() {
-                    selectedWaterRepeat = newValue;
-                    isCustomWaterRepeat = newValue == "Custom";
-                  });
-                },
-                icon: Icons.repeat,
-              ),
-              if (isCustomWaterRepeat)
-                buildCustomRepeatField(
-                  hint: "Enter custom water repeat time",
-                  onChanged: (value) {
-                    setState(() {
-                      customWaterRepeatValue = value;
-                    });
-                  },
-                ),
-            ],
           ],
         ),
       ),
@@ -227,12 +221,14 @@ class _MyAppState extends State<MyApp> {
     required IconData icon,
   }) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(vertical: 4),
       child: Container(
+        width: 180, // Adjust width to fit inside the container
         padding: const EdgeInsets.symmetric(horizontal: 12),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.white, width: 3),
+          color: Colors.grey[900],
           borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.white, width: 2),
         ),
         child: DropdownButtonHideUnderline(
           child: DropdownButton<String>(
@@ -257,12 +253,14 @@ class _MyAppState extends State<MyApp> {
     required Function(String) onChanged,
   }) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(vertical: 4),
       child: Container(
+        width: 180, // Adjust width to fit inside the container
         padding: const EdgeInsets.symmetric(horizontal: 12),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.white, width: 3),
+          color: Colors.grey[900],
           borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.white, width: 2),
         ),
         child: TextField(
           style: const TextStyle(color: Colors.white),
@@ -282,7 +280,7 @@ class _MyAppState extends State<MyApp> {
       value: item,
       child: Text(
         item,
-        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
       ),
     );
   }
