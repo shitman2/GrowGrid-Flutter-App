@@ -17,6 +17,9 @@ class _MyAppState extends State<MyApp> {
   bool isLightVisible = false;
   bool isWaterVisible = false;
   bool isCustomRepeat = false;
+  bool isCustomWaterRepeat = false;
+
+  final TextEditingController boxNameController = TextEditingController();
 
   final List<String> durations = [
     '1 Hour', '2 Hours', '3 Hours', '4 Hours', '5 Hours',
@@ -53,36 +56,91 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  icon: toggleLight
-                      ? const Icon(Icons.lightbulb, size: 30)
-                      : const Icon(Icons.lightbulb_outline, size: 30),
-                  color: Colors.white,
-                  onPressed: () {
-                    setState(() {
-                      toggleLight = !toggleLight;
-                      isLightVisible = !isLightVisible;
-                    });
-                  },
+            const SizedBox(height: 20),
+
+            // TextField for Box Name
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: TextField(
+                controller: boxNameController,
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  hintText: "Enter Box Name",
+                  hintStyle: const TextStyle(color: Colors.white54),
+                  filled: true,
+                  fillColor: Colors.grey[800],
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
-                const SizedBox(width: 20),
-                IconButton(
-                  icon: toggleWater
-                      ? const Icon(Icons.water_drop, size: 30)
-                      : const Icon(Icons.water_drop_outlined, size: 30),
-                  color: Colors.white,
-                  onPressed: () {
-                    setState(() {
-                      toggleWater = !toggleWater;
-                      isWaterVisible = !isWaterVisible;
-                    });
-                  },
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            // Container with Icons
+            Stack(
+              children: [
+                Center(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Container(
+                      height: 130,
+                      width: 400,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                Center(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Container(
+                      height: 125,
+                      width: 395,
+                      color: Colors.blueGrey,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  right: 10,
+                  top: 10,
+                  child: Row(
+                    children: [
+                      if (isLightVisible) 
+                        IconButton(
+                        icon: toggleLight
+                            ? const Icon(Icons.lightbulb, size: 30)
+                            : const Icon(Icons.lightbulb_outline, size: 30),
+                        color: Colors.white,
+                        onPressed: () {
+                          setState(() {
+                            toggleLight = !toggleLight;
+                            isLightVisible = !isLightVisible;
+                          });
+                        },
+                      ),
+                      const SizedBox(width: 10),
+                      IconButton(
+                        icon: toggleWater
+                            ? const Icon(Icons.water_drop, size: 30)
+                            : const Icon(Icons.water_drop_outlined, size: 30),
+                        color: Colors.white,
+                        onPressed: () {
+                          setState(() {
+                            toggleWater = !toggleWater;
+                            isWaterVisible = !isWaterVisible;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ],
+              
             ),
+
+            const SizedBox(height: 10),
 
             // Light Controls
             if (isLightVisible) ...[
@@ -140,12 +198,12 @@ class _MyAppState extends State<MyApp> {
                 onChanged: (newValue) {
                   setState(() {
                     selectedWaterRepeat = newValue;
-                    isCustomRepeat = newValue == "Custom";
+                    isCustomWaterRepeat = newValue == "Custom";
                   });
                 },
                 icon: Icons.repeat,
               ),
-              if (isCustomRepeat)
+              if (isCustomWaterRepeat)
                 buildCustomRepeatField(
                   hint: "Enter custom water repeat time",
                   onChanged: (value) {
